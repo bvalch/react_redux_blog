@@ -5,12 +5,14 @@ import { nanoid } from "@reduxjs/toolkit";
 import { postAdded } from "./postsSlice";
 
 const AddPostForm=()=>{
+    const dispatch=useDispatch();
     const [title,setTitle]=useState("");
     const [content,setContent]=useState("");
 
 
     const handleTitleChange=e=>setTitle(e.target.value)
-    const handleContentChange=e=>setContent(e.target.value)
+    const handleContentChange=e=>{setContent(e.target.value)}
+
     const handleSubmitPost=()=>{
         if(title&&content){
             dispatch(
@@ -42,7 +44,7 @@ const AddPostForm=()=>{
             id="postContent"
             name="postContent"
             value={content}
-            onChcange={handleContentChange}
+            onChange={handleContentChange}
             />
             <button type="button" onClick={handleSubmitPost}>Save Post</button>
         </form>
