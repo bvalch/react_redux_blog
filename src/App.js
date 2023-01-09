@@ -1,5 +1,9 @@
+import PostsList from "./features/post/PostsList";
+
 function App() {
-  return <main>Hello</main>;
+  return(<main>
+    <PostsList/>
+  </main>) ;
 }
 
 export default App;
