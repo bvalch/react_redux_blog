@@ -16,11 +16,8 @@ const AddPostForm=()=>{
     const handleSubmitPost=()=>{
         if(title&&content){
             dispatch(
-                postAdded({
-                    id:nanoid(),
-                    title,
-                    content
-                })
+                //this gets handled by the prepare method in the slice
+                postAdded(title,content)
             )
             setTitle("")
             setContent("")
