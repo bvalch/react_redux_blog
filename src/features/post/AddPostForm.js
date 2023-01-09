@@ -1,52 +1,70 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-//nanoid generates random id's
-import { nanoid } from "@reduxjs/toolkit";
+import { useDispatch, useSelector } from "react-redux";
 import { postAdded } from "./postsSlice";
+import { selectAllUsers } from "../users/usersSlice";
 
-const AddPostForm=()=>{
-    const dispatch=useDispatch();
-    const [title,setTitle]=useState("");
-    const [content,setContent]=useState("");
+const AddPostForm = () => {
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [userId, setUserId] = useState("");
 
+  const users = useSelector(selectAllUsers);
 
-    const handleTitleChange=e=>setTitle(e.target.value)
-    const handleContentChange=e=>{setContent(e.target.value)}
+  const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleContentChange = (e) => setContent(e.target.value);
+  const handleAuthorChange = (e) => setUserId(e.target.value);
 
-    const handleSubmitPost=()=>{
-        if(title&&content){
-            dispatch(
-                //this gets handled by the prepare method in the slice
-                postAdded(title,content)
-            )
-            setTitle("")
-            setContent("")
-        }
+  const handleSubmitPost = () => {
+    if (title && content) {
+      dispatch(
+        //this gets handled by the prepare method in the slice
+        postAdded(title, content, userId)
+      );
+      setTitle("");
+      setContent("");
     }
+  };
 
-    return(
-      <section>
-        <h2>Add a New Post</h2>
-        <form>
-            <label htmlFor="postTitle">Post Title:</label>
-            <input
-            type="text"
-            id="postTitle"
-            name="postTitle"
-            value={title}
-            onChange={handleTitleChange}
-            />
-            <label htmlFor="postContent">Content:</label>
-            <textarea
-            id="postContent"
-            name="postContent"
-            value={content}
-            onChange={handleContentChange}
-            />
-            <button type="button" onClick={handleSubmitPost}>Save Post</button>
-        </form>
+  const canSave=Boolean(title) && Boolean(content) && Boolean(userId)
 
-      </section>
-    )
+  const usersOptions = users.map((user) => {
+    return (
+      <option key={user.id} value={user.id}>
+        {user.name}
+      </option>
+    );
+  });
+
+  return (
+    <section>
+      <h2>Add a New Post</h2>
+      <form>
+        <label htmlFor="postTitle">Post Title:</label>
+        <input
+          type="text"
+          id="postTitle"
+          name="postTitle"
+          value={title}
+          onChange={handleTitleChange}
+        /> 
+        <label htmlFor="postAuthor">Author:</label>
+        <select id="postAuthor" value ={userId} onChange={handleAuthorChange}>
+        <option value=""/>
+        {usersOptions}
+        </select>
+        <label htmlFor="postContent">Content:</label>
+        <textarea
+          id="postContent"
+          name="postContent"
+          value={content}
+          onChange={handleContentChange}
+        />
+        <button type="button" onClick={handleSubmitPost} disabled ={!canSave}>
+          Save Post
+        </button>
+      </form>
+    </section>
+  );
 };
 export default AddPostForm;
